@@ -16,7 +16,15 @@ const productos = [
     material: "Madera MDF / Acabado mate",
     color: "Blanco con roble claro",
   },
+  // Puedes agregar más productos aquí
 ];
+
+// Esta función indica a Next.js qué páginas generar estáticamente
+export async function generateStaticParams() {
+  return productos.map(producto => ({
+    id: producto.id.toString(),
+  }));
+}
 
 const ProductoDetalle = ({ params }) => {
   const router = useRouter();
@@ -24,10 +32,14 @@ const ProductoDetalle = ({ params }) => {
   const [agregado, setAgregado] = useState(false);
 
   const productoId = Number(params.id);
-  const producto = productos.find((p) => p.id === productoId);
+  const producto = productos.find(p => p.id === productoId);
 
   if (!producto) {
-    return <div className="p-10 text-center text-gray-600 dark:text-gray-300">Producto no encontrado.</div>;
+    return (
+      <div className="p-10 text-center text-gray-600 dark:text-gray-300">
+        Producto no encontrado.
+      </div>
+    );
   }
 
   const handleAgregarCarrito = () => {
@@ -70,8 +82,12 @@ const ProductoDetalle = ({ params }) => {
 
         <div className="flex flex-col justify-between">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">{producto.nombre}</h1>
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">{producto.descripcion}</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
+              {producto.nombre}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
+              {producto.descripcion}
+            </p>
 
             <ul className="text-sm text-gray-500 dark:text-gray-400 space-y-2 border-t border-gray-200 dark:border-gray-700 pt-4">
               <li><span className="font-semibold">Dimensiones:</span> {producto.dimensiones}</li>
@@ -86,7 +102,10 @@ const ProductoDetalle = ({ params }) => {
             <div className="text-3xl font-bold text-[var(--accent)]">{producto.precio}</div>
 
             <div className="flex items-center gap-4">
-              <label htmlFor="cantidad" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label
+                htmlFor="cantidad"
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
                 Cantidad:
               </label>
               <input
